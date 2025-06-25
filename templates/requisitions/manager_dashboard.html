@@ -1,0 +1,201 @@
+{% extends 'base.html' %}
+
+
+{% comment %} <!-- requisitions/manager_dashboard.html -->
+{% extends 'base.html' %}
+
+{% block title %}Pending Approvals{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Pending Approvals</h2>
+    <div class="d-flex">
+        <input type="text" class="form-control me-2" placeholder="Search requests...">
+        <select class="form-select" style="width: 150px;">
+            <option>All Departments</option>
+            <!-- Department options -->
+        </select>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Req ID</th>
+                        <th>Requested By</th>
+                        <th>Department</th>
+                        <th>Date</th>
+                        <th>Items</th>
+                        <th>Total Value</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in pending_requisitions %}
+                    <tr>
+                        <td>#REQ-{{ req.id }}</td>
+                        <td>{{ req.requester.get_full_name }}</td>
+                        <td>{{ req.department.name }}</td>
+                        <td>{{ req.created_at|date:"M d, Y" }}</td>
+                        <td>{{ req.items.count }} items</td>
+                        <td>${{ req.total_value|floatformat:2 }}</td>
+                        <td>
+                            <a href="{% url 'requisition_detail' req.id %}" class="btn btn-sm btn-primary">
+                                <i class="fas fa-clipboard-check me-1"></i>Review
+                            </a>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-4">
+                            <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                            <h5>No Pending Approvals</h5>
+                            <p>All requisitions have been processed</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %} {% endcomment %}
+
+
+{% comment %} <!-- requisitions/manager_dashboard.html --> {% endcomment %}
+
+{% block title %}Pending Approvals{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Pending Approvals</h2>
+    {% comment %} <div class="d-flex">
+        <input type="text" class="form-control me-2" placeholder="Search requests...">
+        <select class="form-select" style="width: 150px;">
+            <option>All Departments</option>
+            <!-- Department options -->
+        </select>
+    </div> {% endcomment %}
+    <!-- requisitions/manager_dashboard.html -->
+    <div class="d-flex">
+        {% comment %} <input type="text" class="form-control me-2" placeholder="Search requests..."> {% endcomment %}
+        <div class="fw-bold p-2 bg-light rounded me-2">
+            Department: {{ request.user.department.name }}
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Req ID</th>
+                        <th>Requested By</th>
+                        <th>Department</th>
+                        <th>Date</th>
+                        <th>Items</th>
+                        <th>Total Value</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in pending_list %}
+                    <tr>
+                        <td>#REQ-{{ req.id }}</td>
+                        <td>{{ req.requester.get_full_name }}</td>
+                        <td>{{ req.department.name }}</td>
+                        <td>{{ req.created_at|date:"M d, Y" }}</td>
+                        <td>{{ req.items.count }} items</td>
+                        <td>Tk {{ req.total_value|floatformat:2 }}</td>
+                        <td>
+                            <div class="d-flex gap-1">
+                                <a href="{% url 'requisitions:requisition_detail' req.id %}" class="btn btn-sm btn-primary">
+                                    <i class="fas fa-clipboard-check me-1"></i>Review
+                                </a>
+                                <button type="button" class="btn btn-sm btn-success" 
+                                        data-bs-toggle="modal" data-bs-target="#approveModal{{ req.id }}">
+                                    <i class="fas fa-check-circle me-1"></i>Approve
+                                </button>
+                                <button type="button" class="btn btn-sm btn-danger" 
+                                        data-bs-toggle="modal" data-bs-target="#rejectModal{{ req.id }}">
+                                    <i class="fas fa-times-circle me-1"></i>Reject
+                                </button>
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="7" class="text-center py-4">
+                            <i class="fas fa-check-circle fa-3x text-success mb-3"></i>
+                            <h5>No Pending Approvals</h5>
+                            <p>All requisitions have been processed</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% for req in pending_list %}
+<!-- Approve Modal -->
+<div class="modal fade" id="approveModal{{ req.id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Approve Requisition #REQ-{{ req.id }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'requisitions:approve_requisition' req.id %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <p>Approve this requisition from <strong>{{ req.requester.get_full_name }}</strong>?</p>
+                    <div class="mb-3">
+                        <label for="approveComments{{ req.id }}" class="form-label">Comments (optional):</label>
+                        <textarea class="form-control" id="approveComments{{ req.id }}" 
+                                name="comments" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Confirm Approval</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Reject Modal -->
+<div class="modal fade" id="rejectModal{{ req.id }}" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Reject Requisition #REQ-{{ req.id }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form method="post" action="{% url 'requisitions:reject_requisition' req.id %}">
+                {% csrf_token %}
+                <div class="modal-body">
+                    <p>Reject this requisition from <strong>{{ req.requester.get_full_name }}</strong>?</p>
+                    <div class="mb-3">
+                        <label for="rejectComments{{ req.id }}" class="form-label">Reason for rejection:</label>
+                        <textarea class="form-control" id="rejectComments{{ req.id }}" 
+                                name="comments" rows="3"></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-danger">Confirm Rejection</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

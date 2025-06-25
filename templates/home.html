@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RequisitionPro | Streamline Your Product Requests</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #0d6efd;
+            --secondary: #6c757d;
+            --accent: #198754;
+            --light: #f8f9fa;
+            --dark: #212529;
+        }
+        
+        .hero-section {
+            background: linear-gradient(135deg, rgba(13, 110, 253, 0.9) 0%, rgba(33, 37, 41, 0.95) 100%), 
+                        url('https://images.unsplash.com/photo-1552664730-d307ca884978?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80');
+            background-size: cover;
+            background-position: center;
+            min-height: 85vh;
+            padding-top: 5rem;
+            color: white;
+            display: flex;
+            align-items: center;
+        }
+        
+        .feature-card {
+            transition: all 0.3s ease;
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            height: 100%;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(0,0,0,0.15);
+        }
+        
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: rgba(13, 110, 253, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 2rem;
+            color: var(--primary);
+        }
+        
+        .cta-section {
+            background: linear-gradient(135deg, var(--primary) 0%, #0b5ed7 100%);
+            color: white;
+            padding: 5rem 0;
+        }
+        
+        .stats-card {
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            text-align: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .btn-lg {
+            padding: 0.8rem 2rem;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            font-weight: 600;
+        }
+        
+        .benefit-item {
+            display: flex;
+            margin-bottom: 1.5rem;
+        }
+        
+        .benefit-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(13, 110, 253, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 1rem;
+            flex-shrink: 0;
+            color: var(--primary);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="#">
+                <i class="fas fa-boxes me-2"></i>RequisitionPro
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#features">Features</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#benefits">Benefits</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#contact">Contact</a>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-outline-light" href="{% url 'user_login' %}">Login</a>
+                    </li>
+                    <li class="nav-item ms-lg-2">
+                        <a class="btn btn-primary" href="{% url 'registration' %}">Register</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero-section">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-7">
+                    <h1 class="display-3 fw-bold mb-4">Streamline Your Product Requisition Process</h1>
+                    <p class="lead mb-5">RequisitionPro is an all-in-one solution for managing product requests, approvals, and inventory tracking. Simplify your workflow and save valuable time.</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <a href="registration.html" class="btn btn-primary btn-lg">
+                            <i class="fas fa-user-plus me-2"></i>Get Started
+                        </a>
+                        <a href="#features" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-play-circle me-2"></i>Learn More
+                        </a>
+                    </div>
+                </div>
+                <div class="col-lg-5 d-none d-lg-block">
+                    <div class="position-relative">
+                        <div class="position-absolute top-0 start-0 bg-white shadow-lg p-3 rounded-3" style="width: 300px; transform: rotate(-5deg);">
+                            <div class="d-flex align-items-center mb-3">
+                                <div class="bg-primary text-white rounded-circle p-2 me-2">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div>
+                                    <h6 class="mb-0">John Doe</h6>
+                                    <small class="text-muted">Marketing Department</small>
+                                </div>
+                            </div>
+                            <div class="alert alert-success p-2 mb-2">
+                                <i class="fas fa-check-circle me-2"></i>Request Approved
+                            </div>
+                            <ul class="list-group list-group-flush">
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>Office Supplies</span>
+                                    <span>5 items</span>
+                                </li>
+                                <li class="list-group-item d-flex justify-content-between">
+                                    <span>IT Equipment</span>
+                                    <span>2 items</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div class="position-absolute bottom-0 end-0 bg-white shadow-lg p-3 rounded-3" style="width: 280px; transform: rotate(3deg);">
+                            <div class="d-flex justify-content-between mb-3">
+                                <h6 class="mb-0">Inventory Dashboard</h6>
+                                <span class="badge bg-info">Updated</span>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Laptops</span>
+                                <span class="fw-bold">24 in stock</span>
+                            </div>
+                            <div class="progress mb-3" style="height: 8px;">
+                                <div class="progress-bar bg-success" style="width: 75%"></div>
+                            </div>
+                            <div class="d-flex justify-content-between mb-2">
+                                <span>Office Chairs</span>
+                                <span class="fw-bold text-warning">5 in stock</span>
+                            </div>
+                            <div class="progress" style="height: 8px;">
+                                <div class="progress-bar bg-warning" style="width: 25%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Stats Section -->
+    <section class="py-5 bg-light">
+        <div class="container">
+            <div class="row g-4">
+                <div class="col-md-3 col-6">
+                    <div class="text-center">
+                        <h2 class="text-primary fw-bold">85%</h2>
+                        <p class="text-muted mb-0">Faster Approvals</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="text-center">
+                        <h2 class="text-primary fw-bold">500+</h2>
+                        <p class="text-muted mb-0">Monthly Requests</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="text-center">
+                        <h2 class="text-primary fw-bold">24/7</h2>
+                        <p class="text-muted mb-0">System Availability</p>
+                    </div>
+                </div>
+                <div class="col-md-3 col-6">
+                    <div class="text-center">
+                        <h2 class="text-primary fw-bold">99%</h2>
+                        <p class="text-muted mb-0">User Satisfaction</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-6">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3">Powerful Features</h2>
+                <p class="lead text-muted w-75 mx-auto">Everything you need to manage your product requisition process efficiently</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card bg-white p-4">
+                        <div class="feature-icon">
+                            <i class="fas fa-clipboard-list"></i>
+                        </div>
+                        <h4 class="text-center mb-3">Requisition Management</h4>
+                        <p class="text-muted text-center">Create, track, and manage product requests with an intuitive interface. Submit requests in minutes and monitor their status in real-time.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card bg-white p-4">
+                        <div class="feature-icon">
+                            <i class="fas fa-check-circle"></i>
+                        </div>
+                        <h4 class="text-center mb-3">Approval Workflow</h4>
+                        <p class="text-muted text-center">Streamlined approval process with notifications and reminders. Managers can approve or reject requests with just a few clicks.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card bg-white p-4">
+                        <div class="feature-icon">
+                            <i class="fas fa-boxes"></i>
+                        </div>
+                        <h4 class="text-center mb-3">Inventory Tracking</h4>
+                        <p class="text-muted text-center">Real-time inventory updates with low stock alerts. Maintain optimal stock levels and prevent shortages.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card bg-white p-4">
+                        <div class="feature-icon">
+                            <i class="fas fa-chart-pie"></i>
+                        </div>
+                        <h4 class="text-center mb-3">Reporting & Analytics</h4>
+                        <p class="text-muted text-center">Comprehensive reports on spending, approvals, and inventory. Gain insights to optimize your procurement process.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card bg-white p-4">
+                        <div class="feature-icon">
+                            <i class="fas fa-user-lock"></i>
+                        </div>
+                        <h4 class="text-center mb-3">Role-Based Access</h4>
+                        <p class="text-muted text-center">Customizable permissions for employees, managers, and inventory staff. Ensure the right people have the right access.</p>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <div class="feature-card bg-white p-4">
+                        <div class="feature-icon">
+                            <i class="fas fa-mobile-alt"></i>
+                        </div>
+                        <h4 class="text-center mb-3">Mobile Friendly</h4>
+                        <p class="text-muted text-center">Access the system from any device. Submit and approve requests on the go with our responsive design.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Benefits Section -->
+    <section id="benefits" class="py-6 bg-light">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-lg-6 mb-5 mb-lg-0">
+                    <h2 class="fw-bold mb-4">Transform Your Procurement Process</h2>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-clock"></i>
+                        </div>
+                        <div>
+                            <h5>Save Time</h5>
+                            <p class="text-muted mb-0">Reduce approval times from days to hours with automated workflows.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-chart-line"></i>
+                        </div>
+                        <div>
+                            <h5>Increase Visibility</h5>
+                            <p class="text-muted mb-0">Track every request from submission to fulfillment in real-time.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-lock"></i>
+                        </div>
+                        <div>
+                            <h5>Enhanced Security</h5>
+                            <p class="text-muted mb-0">Enterprise-grade security to protect your sensitive procurement data.</p>
+                        </div>
+                    </div>
+                    <div class="benefit-item">
+                        <div class="benefit-icon">
+                            <i class="fas fa-sync-alt"></i>
+                        </div>
+                        <div>
+                            <h5>Seamless Integration</h5>
+                            <p class="text-muted mb-0">Connect with existing ERP, accounting, and inventory systems.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="bg-white shadow-lg rounded-3 p-4">
+                        <div class="text-center mb-4">
+                            <h4>How It Works</h4>
+                            <p class="text-muted">Simple steps to manage your product requests</p>
+                        </div>
+                        <div class="d-flex align-items-start mb-4">
+                            <div class="bg-primary text-white rounded-circle p-2 me-3" style="width: 40px; height: 40px;">
+                                <span class="fw-bold">1</span>
+                            </div>
+                            <div>
+                                <h5>Submit Request</h5>
+                                <p class="text-muted mb-0">Employee selects products and quantities needed.</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-start mb-4">
+                            <div class="bg-primary text-white rounded-circle p-2 me-3" style="width: 40px; height: 40px;">
+                                <span class="fw-bold">2</span>
+                            </div>
+                            <div>
+                                <h5>Manager Approval</h5>
+                                <p class="text-muted mb-0">Request is routed to the appropriate manager for review.</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-start mb-4">
+                            <div class="bg-primary text-white rounded-circle p-2 me-3" style="width: 40px; height: 40px;">
+                                <span class="fw-bold">3</span>
+                            </div>
+                            <div>
+                                <h5>Inventory Processing</h5>
+                                <p class="text-muted mb-0">Inventory team fulfills approved requests.</p>
+                            </div>
+                        </div>
+                        <div class="d-flex align-items-start">
+                            <div class="bg-primary text-white rounded-circle p-2 me-3" style="width: 40px; height: 40px;">
+                                <span class="fw-bold">4</span>
+                            </div>
+                            <div>
+                                <h5>Delivery & Tracking</h5>
+                                <p class="text-muted mb-0">Items are delivered and tracked in the system.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8 text-center">
+                    <h2 class="fw-bold mb-4">Ready to Streamline Your Requisitions?</h2>
+                    <p class="lead mb-5">Join hundreds of companies that have transformed their procurement process with RequisitionPro. Get started in minutes.</p>
+                    <div class="d-flex justify-content-center gap-3">
+                        <a href="{% url 'registration' %}" class="btn btn-light btn-lg">
+                            <i class="fas fa-user-plus me-2"></i>Create Account
+                        </a>
+                        <a href="{% url 'user_login' %}" class="btn btn-outline-light btn-lg">
+                            <i class="fas fa-sign-in-alt me-2"></i>Login to Account
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials Section -->
+    <section class="py-6">
+        <div class="container">
+            <div class="text-center mb-5">
+                <h2 class="fw-bold mb-3">Trusted by Industry Leaders</h2>
+                <p class="lead text-muted w-75 mx-auto">What our customers say about RequisitionPro</p>
+            </div>
+            
+            <div class="row g-4">
+                <div class="col-lg-4">
+                    <div class="bg-white shadow-sm rounded-3 p-4 h-100">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://randomuser.me/api/portraits/women/45.jpg" class="rounded-circle me-3" width="60" height="60" alt="User">
+                            <div>
+                                <h5 class="mb-0">Sarah Johnson</h5>
+                                <small class="text-muted">Procurement Manager, TechCorp</small>
+                            </div>
+                        </div>
+                        <p class="text-muted">"RequisitionPro has transformed our procurement process. What used to take days now takes hours. The approval workflow is incredibly efficient."</p>
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="bg-white shadow-sm rounded-3 p-4 h-100">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://randomuser.me/api/portraits/men/32.jpg" class="rounded-circle me-3" width="60" height="60" alt="User">
+                            <div>
+                                <h5 class="mb-0">Michael Chen</h5>
+                                <small class="text-muted">Operations Director, Global Retail</small>
+                            </div>
+                        </div>
+                        <p class="text-muted">"The inventory tracking features alone are worth the investment. We've reduced stockouts by 65% since implementing RequisitionPro."</p>
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star-half-alt"></i>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4">
+                    <div class="bg-white shadow-sm rounded-3 p-4 h-100">
+                        <div class="d-flex align-items-center mb-3">
+                            <img src="https://randomuser.me/api/portraits/women/68.jpg" class="rounded-circle me-3" width="60" height="60" alt="User">
+                            <div>
+                                <h5 class="mb-0">Emma Rodriguez</h5>
+                                <small class="text-muted">Finance Controller, HealthFirst</small>
+                            </div>
+                        </div>
+                        <p class="text-muted">"The reporting capabilities have given us unprecedented visibility into our spending. We've identified significant cost savings opportunities."</p>
+                        <div class="text-warning">
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                            <i class="fas fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" class="py-6 bg-light">
+        <div class="container">
+            <div class="row justify-content-center">
+                <div class="col-lg-8">
+                    <div class="card border-0 shadow-lg">
+                        <div class="card-body p-5">
+                            <div class="text-center mb-5">
+                                <h2 class="fw-bold mb-3">Contact Us</h2>
+                                <p class="text-muted">Have questions? Our team is here to help</p>
+                            </div>
+                            <form>
+                                <div class="row g-3 mb-4">
+                                    <div class="col-md-6">
+                                        <label class="form-label">Name</label>
+                                        <input type="text" class="form-control">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label class="form-label">Email</label>
+                                        <input type="email" class="form-control">
+                                    </div>
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Subject</label>
+                                    <input type="text" class="form-control">
+                                </div>
+                                <div class="mb-4">
+                                    <label class="form-label">Message</label>
+                                    <textarea class="form-control" rows="5"></textarea>
+                                </div>
+                                <button type="submit" class="btn btn-primary w-100">
+                                    <i class="fas fa-paper-plane me-2"></i>Send Message
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-white py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="mb-4">
+                        <i class="fas fa-boxes me-2"></i>RequisitionPro
+                    </h5>
+                    <p class="text-muted">Streamlining product requisition and inventory management for businesses of all sizes.</p>
+                    <div class="d-flex gap-3 mt-4">
+                        <a href="#" class="text-white"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-twitter"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#" class="text-white"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h6 class="mb-4">Company</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">About Us</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Careers</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Blog</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">Press</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-4 mb-4 mb-md-0">
+                    <h6 class="mb-4">Resources</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Help Center</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Documentation</a></li>
+                        <li class="mb-2"><a href="#" class="text-muted text-decoration-none">Community</a></li>
+                        <li><a href="#" class="text-muted text-decoration-none">API</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-4">
+                    <h6 class="mb-4">Subscribe to our newsletter</h6>
+                    <p class="text-muted">Stay updated with our latest features and industry news.</p>
+                    <div class="input-group mb-3">
+                        <input type="email" class="form-control" placeholder="Your email address">
+                        <button class="btn btn-primary" type="button">Subscribe</button>
+                    </div>
+                </div>
+            </div>
+            <hr class="mt-5 mb-4 border-secondary">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-0 text-muted">&copy; 2023 RequisitionPro. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <ul class="list-inline mb-0">
+                        <li class="list-inline-item"><a href="#" class="text-muted text-decoration-none">Privacy Policy</a></li>
+                        <li class="list-inline-item"><a href="#" class="text-muted text-decoration-none">Terms of Service</a></li>
+                        <li class="list-inline-item"><a href="#" class="text-muted text-decoration-none">Sitemap</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Smooth scrolling for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+        
+        // Navbar background change on scroll
+        window.addEventListener('scroll', function() {
+            const navbar = document.querySelector('.navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-dark', 'shadow-sm');
+            } else {
+                navbar.classList.remove('bg-dark', 'shadow-sm');
+            }
+        });
+    </script>
+</body>
+</html>

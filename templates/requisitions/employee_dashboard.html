@@ -1,0 +1,75 @@
+<!-- requisitions/employee_dashboard.html -->
+{% extends 'base.html' %}
+
+{% block title %}My Requisitions{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>My Requisitions</h2>
+    <div>
+        <a href="{% url 'product_list' %}" class="btn btn-outline-secondary me-2">
+            <i class="fas fa-boxes me-2"></i>Browse Products
+        </a>
+        <a href="{% url 'requisitions:new_requisition' %}" class="btn btn-primary">
+            <i class="fas fa-plus-circle me-2"></i>New Requisition
+        </a>
+    </div>
+</div>
+
+<div class="card shadow-sm">
+    <div class="card-body">
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead class="table-light">
+                    <tr>
+                        <th>Requisition ID</th>
+                        <th>Date</th>
+                        <th>Items</th>
+                        <th>Total Value</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for req in requisitions %}
+                    <tr>
+                        <td>#REQ-{{ req.id }}</td>
+                        <td>{{ req.created_at|date:"M d, Y" }}</td>
+                        <td>{{ req.items.count }} items</td>
+                        <td>Tk {{ req.total_value|floatformat:2 }}</td> 
+                        <td>
+                            <span class="badge bg-{% if req.status == 'PENDING' %}warning{% elif req.status == 'APPROVED' %}success{% elif req.status == 'REJECTED' %}danger{% else %}info{% endif %}">
+                                {{ req.get_status_display }}
+                            </span>
+                        </td>
+                        <td>
+                            <div class="btn-group" role="group" aria-label="Requisition actions">
+                                <a href="{% url 'requisitions:requisition_detail' req.id %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-eye"></i> View
+                                </a>
+                                {% if req.status == 'PENDING' %}
+                                <a href="{% url 'requisitions:edit_requisition' req.id %}" class="btn btn-sm btn-outline-success">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <a href="{% url 'requisitions:cancel_requisition' req.id %}" class="btn btn-sm btn-outline-danger">
+                                    <i class="fas fa-times-circle"></i> Cancel
+                                </a>
+                                {% endif %}
+                            </div>
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="6" class="text-center py-4">
+                            <i class="fas fa-inbox fa-3x text-muted mb-3"></i>
+                            <h5>No Requisitions Found</h5>
+                            <p>You haven't created any requisitions yet</p>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

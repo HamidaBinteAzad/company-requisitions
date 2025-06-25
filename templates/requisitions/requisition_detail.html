@@ -1,0 +1,284 @@
+<!-- requisitions/requisition_detail.html -->
+{% extends 'base.html' %}
+{% comment %} 
+{% block title %}Requisition #{{ requisition.id }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Requisition #REQ-{{ requisition.id }}</h2>
+    <a href="{% url 'requisitions:employee_dashboard' %}" class="btn btn-outline-secondary">
+        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+    </a>
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-light">
+        <div class="row">
+            <div class="col-md-4">
+                <strong>Requested By:</strong> {{ requisition.requester.get_full_name }}
+            </div>
+            <div class="col-md-4">
+                <strong>Department:</strong> {{ requisition.department.name }}
+            </div>
+            <div class="col-md-4">
+                <strong>Date:</strong> {{ requisition.created_at|date:"M d, Y H:i" }}
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <span class="badge bg-{% if requisition.status == 'PENDING' %}warning{% elif requisition.status == 'APPROVED' %}success{% elif requisition.status == 'REJECTED' %}danger{% else %}info{% endif %} fs-6">
+                    Status: {{ requisition.get_status_display }}
+                </span>
+                <span class="badge bg-secondary ms-2 fs-6">
+                    Priority: {{ requisition.get_priority_display }}
+                </span>
+            </div>
+            <div>
+                <strong>Total Value:</strong> ${{ requisition.total_value|floatformat:2 }}
+            </div>
+        </div>
+        
+        {% if requisition.notes %}
+        <div class="alert alert-light">
+            <strong>Notes:</strong> {{ requisition.notes }}
+        </div>
+        {% endif %}
+        
+        <h5 class="mt-4 mb-3">Requested Items</h5>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>SKU</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in requisition.items.all %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.product.sku }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>${{ item.product.unit_price }}</td>
+                        <td>${{ item.total_price|floatformat:2 }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+{% if requisition.status == 'PENDING' and user.profile.role == 'MANAGER' %}
+<div class="card shadow-sm">
+    <div class="card-body text-center">
+        <h5 class="mb-4">Manager Approval</h5>
+        <form method="POST" class="d-inline-block">
+            {% csrf_token %}
+            <div class="d-flex justify-content-center">
+                <button type="submit" name="action" value="approve" class="btn btn-success btn-lg me-3">
+                    <i class="fas fa-check-circle me-2"></i>Approve
+                </button>
+                <button type="submit" name="action" value="reject" class="btn btn-danger btn-lg">
+                    <i class="fas fa-times-circle me-2"></i>Reject
+                </button>
+            </div>
+            <div class="mt-3">
+                <textarea class="form-control" name="manager_notes" placeholder="Approval comments (optional)" rows="2"></textarea>
+            </div>
+        </form>
+    </div>
+</div>
+{% endif %}
+
+{% if requisition.status == 'APPROVED' and user.profile.role == 'INVENTORY' %}
+<div class="card shadow-sm mt-4">
+    <div class="card-body text-center">
+        <h5 class="mb-4">Inventory Fulfillment</h5>
+        <form method="POST">
+            {% csrf_token %}
+            <button type="submit" name="action" value="fulfill" class="btn btn-primary btn-lg">
+                <i class="fas fa-shipping-fast me-2"></i>Mark as Fulfilled
+            </button>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endblock %} {% endcomment %}
+
+
+<!-- requisitions/requisition_detail.html -->
+{% comment %} {% extends 'base.html' %} {% endcomment %}
+<!-- requisitions/requisition_detail.html -->
+
+{% block title %}Requisition #{{ req.id }}{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Requisition #REQ-{{ req.id }}</h2>
+    {% if user.role == 'Manager' %}
+        <a href="{% url 'requisitions:manager_dashboard' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </a>
+    {% else %}
+        <a href="{% url 'requisitions:employee_dashboard' %}" class="btn btn-outline-secondary">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </a>
+    {% endif %}
+</div>
+
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-light">
+        <div class="row">
+            <div class="col-md-4">
+                <strong>Requested By:</strong> {{ req.requester.get_full_name }}
+            </div>
+            <div class="col-md-4">
+                <strong>Department:</strong> {{ req.department.name }}
+            </div>
+            <div class="col-md-4">
+                <strong>Date:</strong> {{ req.created_at|date:"M d, Y H:i" }}
+            </div>
+        </div>
+    </div>
+    <div class="card-body">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <div>
+                <span class="badge bg-{% if req.status == 'PENDING' %}warning{% elif req.status == 'APPROVED' %}success{% elif req.status == 'REJECTED' %}danger{% elif req.status == 'FULFILLED' %}info{% else %}secondary{% endif %} fs-6">
+                    Status: {{ req.get_status_display }}
+                </span>
+                <span class="badge bg-{% if req.priority == 'HIGH' %}danger{% elif req.priority == 'MEDIUM' %}warning{% else %}secondary{% endif %} ms-2 fs-6">
+                    Priority: {{ req.get_priority_display }}
+                </span>
+            </div>
+            <div>
+                <strong>Total Value:</strong> ${{ req.total_value|floatformat:2 }}
+            </div>
+        </div>
+        
+        {% if req.notes %}
+        <div class="alert alert-light">
+            <strong>Notes:</strong> {{ req.notes }}
+        </div>
+        {% endif %}
+        
+        <h5 class="mt-4 mb-3">Requested Items</h5>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>SKU</th>
+                        <th>Quantity</th>
+                        <th>Unit Price</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in req.items.all %}
+                    <tr>
+                        <td>{{ item.product.name }}</td>
+                        <td>{{ item.product.sku }}</td>
+                        <td>{{ item.quantity }}</td>
+                        <td>${{ item.unit_price|floatformat:2 }}</td>
+                        <td>${{ item.total_price|floatformat:2 }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5" class="text-center text-muted py-4">
+                            No items found in this requisition
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Approval History Section -->
+{% if approvals %}
+<div class="card shadow-sm mb-4">
+    <div class="card-header bg-light">
+        <h5 class="mb-0">Approval History</h5>
+    </div>
+    <div class="card-body">
+        <ul class="list-group list-group-flush">
+            {% for approval in approvals %}
+            <li class="list-group-item">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <strong>{{ approval.approver.get_full_name }}</strong>
+                        <span class="badge bg-{% if approval.decision == 'APPROVE' %}success{% else %}danger{% endif %} ms-2">
+                            {{ approval.get_decision_display }}
+                        </span>
+                    </div>
+                    <div class="text-muted">
+                        {{ approval.timestamp|date:"M d, Y H:i" }}
+                    </div>
+                </div>
+                {% if approval.comments %}
+                <div class="mt-2">
+                    <strong>Comments:</strong> {{ approval.comments }}
+                </div>
+                {% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
+{% endif %}
+
+{% if req.status == 'PENDING' and user.role == 'Manager' %}
+<div class="card shadow-sm">
+    <div class="card-body">
+        <h5 class="mb-4 text-center">Manager Approval</h5>
+        <div class="row">
+            <div class="col-md-6">
+                <form method="post" action="{% url 'requisitions:approve_requisition' req.id %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="approveComments" class="form-label">Comments (optional):</label>
+                        <textarea class="form-control" id="approveComments" name="comments" rows="2"></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="fas fa-check-circle me-2"></i>Approve Requisition
+                    </button>
+                </form>
+            </div>
+            <div class="col-md-6">
+                <form method="post" action="{% url 'requisitions:reject_requisition' req.id %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="rejectComments" class="form-label">Reason for rejection:</label>
+                        <textarea class="form-control" id="rejectComments" name="comments" rows="2" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-danger w-100">
+                        <i class="fas fa-times-circle me-2"></i>Reject Requisition
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+
+{% if req.status == 'APPROVED' and user.role == 'Inventory' %}
+<div class="card shadow-sm mt-4">
+    <div class="card-body text-center">
+        <h5 class="mb-4">Inventory Fulfillment</h5>
+        <form method="POST" action="{% url 'requisitions:fulfill_requisition' req.id %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-primary btn-lg">
+                <i class="fas fa-shipping-fast me-2"></i>Mark as Fulfilled
+            </button>
+        </form>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
